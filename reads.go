@@ -18,13 +18,18 @@ func ReadFile(file_path *string) (*File, error) {
     }
 
     f, err := os.OpenFile(*file_path, os.O_RDONLY, 0644)
-    defer f.Close()
 
     if err != nil {
         return nil, err
     }
 
-    file_bytes := make([]byte, 1024)
+    fstat, err := f.Stat()
+
+    if err != nil {
+        return nil, err
+    }
+
+    file_bytes :=  make([]byte, fstat.Size())
     for {
         _, err = f.Read(file_bytes)
 
